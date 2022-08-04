@@ -1,12 +1,15 @@
 const inquirer = require('inquirer')
 
-const promptProject = () => {
+const promptProject = portfolioData => {
+    if (!portfolioData.projects) {
+        portfolioData.projects = []
+    }
     console.log(`
     =================
     Add a New Project
     =================
     `)
-    return inquirer.prompt ([
+    return inquirer.prompt([
         {
             type: 'input',
             name: 'name',
@@ -15,7 +18,15 @@ const promptProject = () => {
         {
             type: 'input',
             name: 'description',
-            message: 'Provide a description of your project (Required)'
+            message: 'Provide a description of your project (Required)',
+            validate: desInput => {
+                if (desInput) {
+                    return true;
+                } else {
+                    console.log('Please enter a description of your project!');
+                    return false;
+                }
+            }
         },
         {
             type: 'checkbox',
@@ -26,7 +37,15 @@ const promptProject = () => {
         {
             type: 'input',
             name: 'link',
-            message: 'Enter the GitHub link to your project. (Required)'
+            message: 'Enter the GitHub link to your project. (Required)',
+            validate: linkInput => {
+                if (linkInput) {
+                    return true;
+                } else {
+                    console.log('Please enter the link to your GitHub Project!');
+                    return false;
+                }
+            }
         },
         {
             type: 'confirm',
@@ -45,28 +64,44 @@ const promptProject = () => {
 
 const promptUser = () => {
     return inquirer.prompt([
-      {
-        type: 'input',
-        name: 'name',
-        message: 'What is your name?'
-      },
-      {
-        type: 'input',
-        name: 'github',
-        message: 'Enter your GitHub Username'
-      },
-      {
-        type: 'input',
-        name: 'about',
-        message: 'Provide some information about yourself:'
-      }
+        {
+            type: 'input',
+            name: 'name',
+            message: 'What is your name? (Required)',
+            validate: nameInput => {
+                if (nameInput) {
+                    return true;
+                } else {
+                    console.log('Please enter your name!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'github',
+            message: 'Enter your GitHub Username',
+            validate: userNameInput => {
+                if (userNameInput) {
+                    return true;
+                } else {
+                    console.log('Please enter your Github username!');
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'about',
+            message: 'Provide some information about yourself:'
+        }
     ])
-  }
-    promptUser()
-    .then(answers => console.log(answers))
+}
+promptUser()
     .then(promptProject)
-    .then(projectAnswers => console.log(projectAnswers));
-
+    .then(portfolioData => {
+        console.log(portfolioData)
+    })
 // const fs = require('fs')
 // const generatePage = require('./src/page-template.js');
 
